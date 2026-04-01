@@ -1,0 +1,49 @@
+{
+  "audit_run_id": "audit-2026-04-01-acme",
+  "screens": [
+    {
+      "screen_id": "acme-auth-001",
+      "display_name": "로그인 화면",
+      "feature_area": "인증",
+      "route_hint": "/login",
+      "reference_status": "confirmed",
+      "current_state_status": "matched",
+      "references": [
+        {
+          "source_type": "figma",
+          "source_uri": "figma://file/acme-support?node-id=12:88",
+          "source_version": "v1.4",
+          "frame_or_page_ref": "Login / Default"
+        },
+        {
+          "source_type": "pdf",
+          "source_uri": "docs/acme-auth-flow.pdf",
+          "source_version": "2026-03-28",
+          "frame_or_page_ref": "p.3"
+        }
+      ]
+    },
+    {
+      "screen_id": "acme-checkout-014",
+      "display_name": "체크아웃 메인",
+      "feature_area": "결제",
+      "route_hint": "/checkout",
+      "reference_status": "confirmed",
+      "current_state_status": "drifted",
+      "references": [
+        {
+          "source_type": "figma",
+          "source_uri": "figma://file/acme-support?node-id=48:201",
+          "source_version": "v2.1",
+          "frame_or_page_ref": "Checkout / Main"
+        },
+        {
+          "source_type": "pdf",
+          "source_uri": "docs/acme-checkout.pdf",
+          "source_version": "2026-03-29",
+          "frame_or_page_ref": "p.14"
+        }
+      ]
+    }
+  ]
+}

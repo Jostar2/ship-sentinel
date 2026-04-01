@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ship Sentinel</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">시나리오 기반 QA 감사 서비스</p>
+          <h1>서비스를 직접 테스트하고, 증적과 감사 패키지까지 한 번에 정리합니다.</h1>
+          <p>
+            Ship Sentinel은 현실적인 시나리오 작성, 직접 테스트, 스크린샷 증적, 버그 정리,
+            그리고 ship / fix / block 판단 메모까지 한 흐름으로 제공하는 QA 워크스페이스다.
+          </p>
+          <div class="button-row">
+            <a class="primary-link" href="#dashboard">샘플 대시보드 보기</a>
+            <a class="secondary-link" href="../docs/product/deliverables.md">산출물 보기</a>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <span>서비스 산출물</span>
+          <strong>시나리오 + 증적 + 메모</strong>
+          <p>출시 전 QA 확신이 필요한 팀과 에이전시를 위한 서비스다.</p>
+        </div>
+      </section>
+
+      <section class="pillars">
+        <article>시나리오 시트</article>
+        <article>실행 로그</article>
+        <article>버그 등록부</article>
+        <article>증적 인덱스</article>
+        <article>릴리즈 메모</article>
+      </section>
+
+      <section class="service-strip">
+        <div class="section-head">
+          <p class="eyebrow">서비스 진행 방식</p>
+          <h2>고객이 이해할 수 있는 QA 감사 한 사이클.</h2>
+        </div>
+        <div id="service-flow" class="summary-strip"></div>
+      </section>
+
+      <section class="dashboard" id="dashboard">
+        <div class="section-head">
+          <p class="eyebrow">샘플 감사 패키지</p>
+          <h2>릴리즈 전 QA 감사를 마친 뒤 고객이 받는 결과물.</h2>
+        </div>
+        <div class="decision-card" id="decision-card"></div>
+        <div class="panel">
+          <h3>감사 산출물</h3>
+          <div id="deliverables-list" class="stack"></div>
+        </div>
+        <div class="dashboard-grid">
+          <div class="panel">
+            <h3>핵심 이슈</h3>
+            <div id="findings-list" class="stack"></div>
+          </div>
+          <div class="panel">
+            <h3>증적 타임라인</h3>
+            <div id="timeline-list" class="stack"></div>
+          </div>
+        </div>
+        <div class="panel memo-panel">
+          <h3>릴리즈 메모</h3>
+          <div id="memo-card"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+  </html>

@@ -1,0 +1,15 @@
+# Architecture Docs
+
+- [system-architecture.md](./system-architecture.md)
+- [data-model.md](./data-model.md)
+- [api-contracts.md](./api-contracts.md)
+- [screen-id-strategy.md](./screen-id-strategy.md)
+- [component-map.md](./component-map.md)
+- [windows-helper-spec.md](./windows-helper-spec.md)
+- [helper-localhost-bridge.md](./helper-localhost-bridge.md)
+- [mismatch-clusters.md](./mismatch-clusters.md)
+- [delivery-audit-trail.md](./delivery-audit-trail.md)
+- [run-lineage.md](./run-lineage.md)
+- [run-snapshots.md](./run-snapshots.md)
+- [autonomy-loop.md](./autonomy-loop.md)
+- [implementation-roadmap.md](./implementation-roadmap.md)

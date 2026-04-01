@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>유지보수 보드 프로토타입</title>
+    <link rel="stylesheet" href="./prototype.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <nav class="topbar">
+        <a href="./index.html">뒤로</a>
+        <a href="./screen-workspace.html">이전: QA 세션</a>
+      </nav>
+
+      <section class="hero">
+        <p class="eyebrow">화면 5</p>
+        <h1>유지보수 보드</h1>
+        <p>현행화 요청과 수정본 업로드를 후속 정리하는 보조 화면이다.</p>
+      </section>
+
+      <section class="layout board-layout">
+        <article class="panel">
+          <p class="eyebrow">요청 큐</p>
+          <div class="queue-list">
+            <div class="queue-row">
+              <div class="row-topline"><strong>CR-003 체크아웃 완료 상태 화면</strong><span class="badge badge-warning">열림</span></div>
+              <p>BUG-001 연결 / Screen ID: SCR-014 / 담당: UX designer</p>
+            </div>
+            <div class="queue-row">
+              <div class="row-topline"><strong>CR-004 관리자 export 접근 흐름</strong><span class="badge badge-neutral">진행 중</span></div>
+              <p>BUG-004 연결 / Screen ID: SCR-022 / 담당: documentation owner</p>
+            </div>
+            <div class="queue-row">
+              <div class="row-topline"><strong>CR-001 로그인 보조 문구 수정</strong><span class="badge badge-ok">종료</span></div>
+              <p>재패키징 완료 / v1.1 반영</p>
+            </div>
+          </div>
+        </article>
+        <article class="panel">
+          <p class="eyebrow">요청 상세</p>
+          <div class="queue-list">
+            <div class="queue-row">
+              <strong>연결된 이슈</strong>
+              <p>BUG-001 결제 제출 후 에러 페이지 이동</p>
+            </div>
+            <div class="queue-row">
+              <strong>대상 레퍼런스</strong>
+              <p>Figma frame: Checkout Complete / PDF p.15 / 현재 상태 문서 v0.9</p>
+            </div>
+            <div class="queue-row">
+              <strong>요청 변경 내용</strong>
+              <p>성공 상태가 아닌 에러 상태 분기와 에러 메시지 상태를 설계서 기준에 반영</p>
+            </div>
+            <div class="queue-row">
+              <strong>수정본 업로드 및 패키징</strong>
+              <p>revised-checkout-flow.pdf 업로드 / ready to pack / package v1.2 포함 예정</p>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+  </html>

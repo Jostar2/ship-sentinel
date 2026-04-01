@@ -1,0 +1,44 @@
+{
+  "OPS-001": {
+    "description": "Autonomy executor bootstrap smoke recipe",
+    "commands": [
+      [
+        "python",
+        "ship-sentinel/scripts/autonomy_loop.py",
+        "status"
+      ],
+      [
+        "python",
+        "ship-sentinel/scripts/refresh_run_library.py"
+      ],
+      [
+        "python",
+        "ship-sentinel/scripts/export_audit_pack.py",
+        "ship-sentinel/app/data/demo-state.js",
+        "--output-dir",
+        "ship-sentinel/output/autonomy-smoke"
+      ]
+    ]
+  },
+  "EXPORT-003": {
+    "description": "Export package verification recipe",
+    "commands": [
+      [
+        "python",
+        "ship-sentinel/scripts/export_audit_pack.py",
+        "ship-sentinel/app/data/demo-state.js",
+        "--output-dir",
+        "ship-sentinel/output/from-app-demo-state"
+      ]
+    ]
+  },
+  "DATA-002": {
+    "description": "Saved run library refresh recipe",
+    "commands": [
+      [
+        "python",
+        "ship-sentinel/scripts/refresh_run_library.py"
+      ]
+    ]
+  }
+}

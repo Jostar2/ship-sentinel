@@ -1,0 +1,3873 @@
+{
+  "project": "ship-sentinel",
+  "updated_at": "2026-04-01",
+  "slices": [
+    {
+      "id": "FOUND-001",
+      "title": "Operational prototype foundation",
+      "status": "completed",
+      "priority": 10,
+      "depends_on": [],
+      "summary": "Static docs, wireframes, export templates, and prototype HTML surfaces.",
+      "write_scope": [
+        "ship-sentinel/docs/**",
+        "ship-sentinel/web/**",
+        "ship-sentinel/templates/**",
+        "ship-sentinel/scripts/export_audit_pack.py"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\data\\demo-workspace.json"
+      ]
+    },
+    {
+      "id": "APP-001",
+      "title": "Interactive QA session app shell",
+      "status": "completed",
+      "priority": 20,
+      "depends_on": [
+        "FOUND-001"
+      ],
+      "summary": "Interactive static SPA with QA session workflow, persistence, notes, and evidence preview.",
+      "write_scope": [
+        "ship-sentinel/app/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "node --check ship-sentinel\\app\\data\\demo-state.js"
+      ]
+    },
+    {
+      "id": "HELPER-001",
+      "title": "Browser bridge and localhost helper mock",
+      "status": "completed",
+      "priority": 30,
+      "depends_on": [
+        "APP-001"
+      ],
+      "summary": "Capture ingress through browser events plus localhost health and session-bind mock server.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "APP-002",
+      "title": "Audit creation UI and file-backed run creation",
+      "status": "completed",
+      "priority": 40,
+      "depends_on": [
+        "APP-001"
+      ],
+      "summary": "Turn intake from a read-only surface into a creator that can start a new audit run from seeded defaults and write a local run file.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/docs/architecture/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-002",
+      "title": "Mock helper capture push endpoint",
+      "status": "completed",
+      "priority": 50,
+      "depends_on": [
+        "HELPER-001"
+      ],
+      "summary": "Add helper-side capture push endpoint and app-side pull/push test flow so simulated captures move over localhost without manual buttons.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-002",
+      "title": "Export live app state to audit pack",
+      "status": "completed",
+      "priority": 60,
+      "depends_on": [
+        "APP-002"
+      ],
+      "summary": "Use the real app state shape as input for spreadsheet and memo export instead of only the separate workspace demo JSON.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\data\\demo-workspace.json"
+      ]
+    },
+    {
+      "id": "DATA-001",
+      "title": "File-backed project store",
+      "status": "completed",
+      "priority": 70,
+      "depends_on": [
+        "APP-002"
+      ],
+      "summary": "Separate demo seed from operator-created local audit files and create a stable directory for saved audits.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "NOTES-001",
+      "title": "Dedicated note board and note filters",
+      "status": "completed",
+      "priority": 80,
+      "depends_on": [
+        "APP-001"
+      ],
+      "summary": "Break notes out from screen-only view into a first-class surface with type, status, and promotion filters.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "DATA-002",
+      "title": "Saved run manifest and app-side audit switcher",
+      "status": "completed",
+      "priority": 90,
+      "depends_on": [
+        "DATA-001"
+      ],
+      "summary": "Generate a browser-loadable saved run manifest and add an in-app audit switcher so operators can move between saved runs without manual file hunting.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py"
+      ]
+    },
+    {
+      "id": "EXPORT-003",
+      "title": "Evidence bundle manifest and package versioning",
+      "status": "completed",
+      "priority": 100,
+      "depends_on": [
+        "EXPORT-002"
+      ],
+      "summary": "Extend exports with evidence bundle manifest, package version history, and deterministic delivery naming.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "HELPER-003",
+      "title": "Helper event log and receipt board",
+      "status": "completed",
+      "priority": 110,
+      "depends_on": [
+        "HELPER-002"
+      ],
+      "summary": "Add helper delivery receipts, event history, and a compact receipt board inside the app so operators can trust ingestion state.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "OPS-001",
+      "title": "Local autonomous executor scaffold",
+      "status": "completed",
+      "priority": 120,
+      "depends_on": [
+        "HELPER-003"
+      ],
+      "summary": "Build a local executor scaffold that can read NEXT_SLICE, run deterministic project commands, and record execution receipts without needing manual direction each time.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/ops/autonomy/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\autonomy_loop.py"
+      ]
+    },
+    {
+      "id": "UX-001",
+      "title": "Keyboard-first QA actions",
+      "status": "completed",
+      "priority": 130,
+      "depends_on": [
+        "APP-001"
+      ],
+      "summary": "Add keyboard shortcuts for capture triage, issue creation, and screen navigation so operators can stay in flow.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "OPS-002",
+      "title": "One-shot autonomy cycle runner",
+      "status": "completed",
+      "priority": 140,
+      "depends_on": [
+        "OPS-001"
+      ],
+      "summary": "Add a single-command local autonomy cycle runner that claims work when needed, runs deterministic executor steps, and writes a cycle receipt.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/ops/autonomy/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\autonomous_executor.py"
+      ]
+    },
+    {
+      "id": "APP-003",
+      "title": "Command palette and audit jump",
+      "status": "completed",
+      "priority": 150,
+      "depends_on": [
+        "UX-001",
+        "DATA-002"
+      ],
+      "summary": "Add a compact command palette for opening views, switching audits, and triggering common QA actions from one place.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "OPS-003",
+      "title": "Background watch launcher and Windows task scaffold",
+      "status": "completed",
+      "priority": 160,
+      "depends_on": [
+        "OPS-002"
+      ],
+      "summary": "Add a background watch launcher and a Windows scheduled-task registration scaffold so the autonomy cycle can continue without chat input.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**",
+        "ship-sentinel/ops/autonomy/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\autonomy_cycle.py"
+      ]
+    },
+    {
+      "id": "APP-004",
+      "title": "Autonomy control center",
+      "status": "completed",
+      "priority": 170,
+      "depends_on": [
+        "OPS-003"
+      ],
+      "summary": "Expose heartbeat, current slice, last cycle receipt, and last agent message inside the app so unattended execution is visible without opening files.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/ops/autonomy/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-005",
+      "title": "Reference compare annotations and mismatch tagging",
+      "status": "completed",
+      "priority": 180,
+      "depends_on": [
+        "APP-001",
+        "APP-004"
+      ],
+      "summary": "Add inline annotation markers to the compare workspace so operators can tag mismatches directly on reference/live panes before promoting them to issues or change requests.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-006",
+      "title": "Annotation editing and geometry note filters",
+      "status": "completed",
+      "priority": 190,
+      "depends_on": [
+        "APP-005",
+        "NOTES-001"
+      ],
+      "summary": "Add edit/remove actions for compare annotations and filter the note board by geometric note presence so compare mismatches become manageable at scale.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-007",
+      "title": "Annotation detail drawer and quick promote",
+      "status": "completed",
+      "priority": 200,
+      "depends_on": [
+        "APP-006"
+      ],
+      "summary": "Add annotation detail drawer with edit metadata, evidence links, and one-click promote to bug or change request.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-004",
+      "title": "Helper duplicate detection and stale queue cleanup",
+      "status": "completed",
+      "priority": 210,
+      "depends_on": [
+        "HELPER-003"
+      ],
+      "summary": "Detect duplicate helper captures, mark stale queue items, and surface cleanup actions before inbox pollution grows.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-004",
+      "title": "Package diff report and rerun comparison",
+      "status": "completed",
+      "priority": 220,
+      "depends_on": [
+        "EXPORT-003"
+      ],
+      "summary": "Generate a package-to-package diff summary so reruns can show what changed between audit outputs.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-003",
+      "title": "Run snapshot archive and restore flow",
+      "status": "completed",
+      "priority": 230,
+      "depends_on": [
+        "DATA-002"
+      ],
+      "summary": "Archive run snapshots with restore metadata so operators can roll back to a prior audit state or compare branches of QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-008",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 318,
+      "depends_on": [
+        "APP-007"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-005",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 325,
+      "depends_on": [
+        "HELPER-004"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-005",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 335,
+      "depends_on": [
+        "EXPORT-004"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-004",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 344,
+      "depends_on": [
+        "DATA-003"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-002",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 352,
+      "depends_on": [
+        "UX-001"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-009",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 319,
+      "depends_on": [
+        "APP-008"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-006",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 326,
+      "depends_on": [
+        "HELPER-005"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-006",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 336,
+      "depends_on": [
+        "EXPORT-005"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-005",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 345,
+      "depends_on": [
+        "DATA-004"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-003",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 353,
+      "depends_on": [
+        "UX-002"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-010",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 320,
+      "depends_on": [
+        "APP-009"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-007",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 327,
+      "depends_on": [
+        "HELPER-006"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-007",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 337,
+      "depends_on": [
+        "EXPORT-006"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-006",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 346,
+      "depends_on": [
+        "DATA-005"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-004",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 354,
+      "depends_on": [
+        "UX-003"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-011",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 321,
+      "depends_on": [
+        "APP-010"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-008",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 328,
+      "depends_on": [
+        "HELPER-007"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-008",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 338,
+      "depends_on": [
+        "EXPORT-007"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-007",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 347,
+      "depends_on": [
+        "DATA-006"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-005",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 355,
+      "depends_on": [
+        "UX-004"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-012",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 322,
+      "depends_on": [
+        "APP-011"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-009",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 329,
+      "depends_on": [
+        "HELPER-008"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-009",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 339,
+      "depends_on": [
+        "EXPORT-008"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-008",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 348,
+      "depends_on": [
+        "DATA-007"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-006",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 356,
+      "depends_on": [
+        "UX-005"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-013",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 323,
+      "depends_on": [
+        "APP-012"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-010",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 330,
+      "depends_on": [
+        "HELPER-009"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-010",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 340,
+      "depends_on": [
+        "EXPORT-009"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-009",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 349,
+      "depends_on": [
+        "DATA-008"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-007",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 357,
+      "depends_on": [
+        "UX-006"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-014",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 324,
+      "depends_on": [
+        "APP-013"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-011",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 331,
+      "depends_on": [
+        "HELPER-010"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-011",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 341,
+      "depends_on": [
+        "EXPORT-010"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-010",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 350,
+      "depends_on": [
+        "DATA-009"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-008",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 358,
+      "depends_on": [
+        "UX-007"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-015",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 325,
+      "depends_on": [
+        "APP-014"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-012",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 332,
+      "depends_on": [
+        "HELPER-011"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-012",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 342,
+      "depends_on": [
+        "EXPORT-011"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-011",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 351,
+      "depends_on": [
+        "DATA-010"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-009",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 359,
+      "depends_on": [
+        "UX-008"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-016",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 326,
+      "depends_on": [
+        "APP-015"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-013",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 333,
+      "depends_on": [
+        "HELPER-012"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-013",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 343,
+      "depends_on": [
+        "EXPORT-012"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-012",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 352,
+      "depends_on": [
+        "DATA-011"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-010",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 360,
+      "depends_on": [
+        "UX-009"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-017",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 327,
+      "depends_on": [
+        "APP-016"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-014",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 334,
+      "depends_on": [
+        "HELPER-013"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-014",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 344,
+      "depends_on": [
+        "EXPORT-013"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-013",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 353,
+      "depends_on": [
+        "DATA-012"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-011",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 361,
+      "depends_on": [
+        "UX-010"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-018",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 328,
+      "depends_on": [
+        "APP-017"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-015",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 335,
+      "depends_on": [
+        "HELPER-014"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-015",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 345,
+      "depends_on": [
+        "EXPORT-014"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-014",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 354,
+      "depends_on": [
+        "DATA-013"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-012",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 362,
+      "depends_on": [
+        "UX-011"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-019",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 329,
+      "depends_on": [
+        "APP-018"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-016",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 336,
+      "depends_on": [
+        "HELPER-015"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-016",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 346,
+      "depends_on": [
+        "EXPORT-015"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-015",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 355,
+      "depends_on": [
+        "DATA-014"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-013",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 363,
+      "depends_on": [
+        "UX-012"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-020",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 330,
+      "depends_on": [
+        "APP-019"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-017",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 337,
+      "depends_on": [
+        "HELPER-016"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-017",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 347,
+      "depends_on": [
+        "EXPORT-016"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-016",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 356,
+      "depends_on": [
+        "DATA-015"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-014",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 364,
+      "depends_on": [
+        "UX-013"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-021",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 331,
+      "depends_on": [
+        "APP-020"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-018",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 338,
+      "depends_on": [
+        "HELPER-017"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-018",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 348,
+      "depends_on": [
+        "EXPORT-017"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-017",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 357,
+      "depends_on": [
+        "DATA-016"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-015",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 365,
+      "depends_on": [
+        "UX-014"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-022",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 332,
+      "depends_on": [
+        "APP-021"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-019",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 339,
+      "depends_on": [
+        "HELPER-018"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-019",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 349,
+      "depends_on": [
+        "EXPORT-018"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-018",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 358,
+      "depends_on": [
+        "DATA-017"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-016",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 366,
+      "depends_on": [
+        "UX-015"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-023",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 333,
+      "depends_on": [
+        "APP-022"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-020",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 340,
+      "depends_on": [
+        "HELPER-019"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-020",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 350,
+      "depends_on": [
+        "EXPORT-019"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-019",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 359,
+      "depends_on": [
+        "DATA-018"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-017",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 367,
+      "depends_on": [
+        "UX-016"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-024",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 334,
+      "depends_on": [
+        "APP-023"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-021",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 341,
+      "depends_on": [
+        "HELPER-020"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-021",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 351,
+      "depends_on": [
+        "EXPORT-020"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-020",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 360,
+      "depends_on": [
+        "DATA-019"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-018",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 368,
+      "depends_on": [
+        "UX-017"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-025",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 335,
+      "depends_on": [
+        "APP-024"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-022",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 342,
+      "depends_on": [
+        "HELPER-021"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-022",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 352,
+      "depends_on": [
+        "EXPORT-021"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-021",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 361,
+      "depends_on": [
+        "DATA-020"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-019",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 369,
+      "depends_on": [
+        "UX-018"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-026",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 336,
+      "depends_on": [
+        "APP-025"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-023",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 343,
+      "depends_on": [
+        "HELPER-022"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-023",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 353,
+      "depends_on": [
+        "EXPORT-022"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-022",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 362,
+      "depends_on": [
+        "DATA-021"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-020",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 370,
+      "depends_on": [
+        "UX-019"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-027",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 337,
+      "depends_on": [
+        "APP-026"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-024",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 344,
+      "depends_on": [
+        "HELPER-023"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-024",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 354,
+      "depends_on": [
+        "EXPORT-023"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-023",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 363,
+      "depends_on": [
+        "DATA-022"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-021",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 371,
+      "depends_on": [
+        "UX-020"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-028",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 338,
+      "depends_on": [
+        "APP-027"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-025",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 345,
+      "depends_on": [
+        "HELPER-024"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-025",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 355,
+      "depends_on": [
+        "EXPORT-024"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-024",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 364,
+      "depends_on": [
+        "DATA-023"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-022",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 372,
+      "depends_on": [
+        "UX-021"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-029",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 339,
+      "depends_on": [
+        "APP-028"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-026",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 346,
+      "depends_on": [
+        "HELPER-025"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-026",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 356,
+      "depends_on": [
+        "EXPORT-025"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-025",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 365,
+      "depends_on": [
+        "DATA-024"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-023",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 373,
+      "depends_on": [
+        "UX-022"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-030",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 340,
+      "depends_on": [
+        "APP-029"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-027",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 347,
+      "depends_on": [
+        "HELPER-026"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-027",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 357,
+      "depends_on": [
+        "EXPORT-026"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-026",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 366,
+      "depends_on": [
+        "DATA-025"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-024",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 374,
+      "depends_on": [
+        "UX-023"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-031",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 341,
+      "depends_on": [
+        "APP-030"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-028",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 348,
+      "depends_on": [
+        "HELPER-027"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-028",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 358,
+      "depends_on": [
+        "EXPORT-027"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-027",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 367,
+      "depends_on": [
+        "DATA-026"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-025",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 375,
+      "depends_on": [
+        "UX-024"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-032",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 342,
+      "depends_on": [
+        "APP-031"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-029",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 349,
+      "depends_on": [
+        "HELPER-028"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-029",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 359,
+      "depends_on": [
+        "EXPORT-028"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-028",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 368,
+      "depends_on": [
+        "DATA-027"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-026",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 376,
+      "depends_on": [
+        "UX-025"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-033",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 343,
+      "depends_on": [
+        "APP-032"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-030",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 350,
+      "depends_on": [
+        "HELPER-029"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-030",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 360,
+      "depends_on": [
+        "EXPORT-029"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-029",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 369,
+      "depends_on": [
+        "DATA-028"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-027",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 377,
+      "depends_on": [
+        "UX-026"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-034",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 344,
+      "depends_on": [
+        "APP-033"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-031",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 351,
+      "depends_on": [
+        "HELPER-030"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-031",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 361,
+      "depends_on": [
+        "EXPORT-030"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-030",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 370,
+      "depends_on": [
+        "DATA-029"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-028",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 378,
+      "depends_on": [
+        "UX-027"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-035",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 345,
+      "depends_on": [
+        "APP-034"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-032",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 352,
+      "depends_on": [
+        "HELPER-031"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-032",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 362,
+      "depends_on": [
+        "EXPORT-031"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-031",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 371,
+      "depends_on": [
+        "DATA-030"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-029",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 379,
+      "depends_on": [
+        "UX-028"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-036",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 346,
+      "depends_on": [
+        "APP-035"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-033",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 353,
+      "depends_on": [
+        "HELPER-032"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-033",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 363,
+      "depends_on": [
+        "EXPORT-032"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-032",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 372,
+      "depends_on": [
+        "DATA-031"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-030",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 380,
+      "depends_on": [
+        "UX-029"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-037",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 347,
+      "depends_on": [
+        "APP-036"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-034",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 354,
+      "depends_on": [
+        "HELPER-033"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-034",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 364,
+      "depends_on": [
+        "EXPORT-033"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-033",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 373,
+      "depends_on": [
+        "DATA-032"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-031",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 381,
+      "depends_on": [
+        "UX-030"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-038",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 348,
+      "depends_on": [
+        "APP-037"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-035",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 355,
+      "depends_on": [
+        "HELPER-034"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-035",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 365,
+      "depends_on": [
+        "EXPORT-034"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-034",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 374,
+      "depends_on": [
+        "DATA-033"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-032",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 382,
+      "depends_on": [
+        "UX-031"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-039",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 349,
+      "depends_on": [
+        "APP-038"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-036",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 356,
+      "depends_on": [
+        "HELPER-035"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-036",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 366,
+      "depends_on": [
+        "EXPORT-035"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-035",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 375,
+      "depends_on": [
+        "DATA-034"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-033",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 383,
+      "depends_on": [
+        "UX-032"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-040",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 350,
+      "depends_on": [
+        "APP-039"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-037",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 357,
+      "depends_on": [
+        "HELPER-036"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-037",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 367,
+      "depends_on": [
+        "EXPORT-036"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-036",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 376,
+      "depends_on": [
+        "DATA-035"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-034",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 384,
+      "depends_on": [
+        "UX-033"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-041",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 351,
+      "depends_on": [
+        "APP-040"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-038",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 358,
+      "depends_on": [
+        "HELPER-037"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-038",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 368,
+      "depends_on": [
+        "EXPORT-037"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-037",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 377,
+      "depends_on": [
+        "DATA-036"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-035",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 385,
+      "depends_on": [
+        "UX-034"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-042",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 352,
+      "depends_on": [
+        "APP-041"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-039",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 359,
+      "depends_on": [
+        "HELPER-038"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-039",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 369,
+      "depends_on": [
+        "EXPORT-038"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-038",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 378,
+      "depends_on": [
+        "DATA-037"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-036",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 386,
+      "depends_on": [
+        "UX-035"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-043",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 353,
+      "depends_on": [
+        "APP-042"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-040",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 360,
+      "depends_on": [
+        "HELPER-039"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-040",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 370,
+      "depends_on": [
+        "EXPORT-039"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-039",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "completed",
+      "priority": 379,
+      "depends_on": [
+        "DATA-038"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-037",
+      "title": "Flow mode and distraction-free execution",
+      "status": "completed",
+      "priority": 387,
+      "depends_on": [
+        "UX-036"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "APP-044",
+      "title": "Mismatch cluster board and batch actions",
+      "status": "completed",
+      "priority": 354,
+      "depends_on": [
+        "APP-043"
+      ],
+      "summary": "Group related annotations and issues into mismatch clusters so operators can batch triage and reduce repeated handoff work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "HELPER-041",
+      "title": "Helper inbox aging and retry policy",
+      "status": "completed",
+      "priority": 361,
+      "depends_on": [
+        "HELPER-040"
+      ],
+      "summary": "Track helper inbox age, retry stale deliveries, and surface aging queues before evidence ingestion silently degrades.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/helper/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js",
+        "python -m py_compile ship-sentinel\\helper\\mock_helper_server.py"
+      ]
+    },
+    {
+      "id": "EXPORT-041",
+      "title": "Delivery audit trail and client summary bundle",
+      "status": "completed",
+      "priority": 371,
+      "depends_on": [
+        "EXPORT-040"
+      ],
+      "summary": "Create a client-facing delivery trail with package history, summary deltas, and a compact audit narrative for handoff confidence.",
+      "write_scope": [
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/output/**",
+        "ship-sentinel/docs/product/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python ship-sentinel\\scripts\\export_audit_pack.py ship-sentinel\\app\\data\\demo-state.js --output-dir ship-sentinel\\output\\from-app-demo-state"
+      ]
+    },
+    {
+      "id": "DATA-040",
+      "title": "Run lineage graph and branch merge notes",
+      "status": "in_progress",
+      "priority": 380,
+      "depends_on": [
+        "DATA-039"
+      ],
+      "summary": "Model lineage between saved runs so operators can see rerun ancestry, branch notes, and merge candidates across QA work.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/data/**",
+        "ship-sentinel/scripts/**",
+        "ship-sentinel/docs/architecture/**"
+      ],
+      "verification": [
+        "python -m py_compile ship-sentinel\\scripts\\refresh_run_library.py",
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    },
+    {
+      "id": "UX-038",
+      "title": "Flow mode and distraction-free execution",
+      "status": "pending",
+      "priority": 388,
+      "depends_on": [
+        "UX-037"
+      ],
+      "summary": "Add a focused flow mode that hides secondary chrome so operators can move through scenarios with less context switching.",
+      "write_scope": [
+        "ship-sentinel/app/**",
+        "ship-sentinel/docs/ux/**"
+      ],
+      "verification": [
+        "node --check ship-sentinel\\app\\app.js"
+      ]
+    }
+  ]
+}

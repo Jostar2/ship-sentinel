@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QA 세션 프로토타입</title>
+    <link rel="stylesheet" href="./prototype.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <nav class="topbar">
+        <a href="./index.html">뒤로</a>
+        <a href="./deliverables.html">다음: 산출물 패키지</a>
+      </nav>
+
+      <section class="hero">
+        <p class="eyebrow">세션 중심 메인 화면</p>
+        <h1>QA 세션</h1>
+        <p>레퍼런스 비교, 캡처 인박스, 이슈 등록, 스펙 드리프트 분류, 산출물 누적을 한 흐름으로 압축한 메인 워크스페이스다.</p>
+      </section>
+
+      <section class="panel">
+        <p class="eyebrow">고정 문맥 바</p>
+        <div class="stat-grid">
+          <article class="stat-card">
+            <span>Audit</span>
+            <div class="big-number">A-104</div>
+            <p class="mini">Acme 베타 릴리즈 검수</p>
+          </article>
+          <article class="stat-card">
+            <span>Screen</span>
+            <div class="big-number">SCR-014</div>
+            <p class="mini">체크아웃 메인</p>
+          </article>
+          <article class="stat-card">
+            <span>현재 URL</span>
+            <div class="big-number">/checkout</div>
+            <p class="mini">Safari iPhone / 390x844</p>
+          </article>
+          <article class="stat-card">
+            <span>활성 시나리오</span>
+            <div class="big-number">SCN-002</div>
+            <p class="mini">카드 결제 완료</p>
+          </article>
+          <article class="stat-card">
+            <span>최근 캡처</span>
+            <div class="big-number">2건</div>
+            <p class="mini">Windows helper 자동 수집</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="layout workspace-layout">
+        <article class="panel">
+          <p class="eyebrow">세션 레일</p>
+          <div class="queue-list">
+            <div class="queue-row">
+              <div class="row-topline"><strong>SCR-014 체크아웃</strong><span class="badge badge-blocker">실패</span></div>
+              <p>핵심 결제 플로우 / 변경 많음</p>
+            </div>
+            <div class="queue-row">
+              <div class="row-topline"><strong>SCR-015 주문 확인</strong><span class="badge badge-neutral">대기</span></div>
+              <p>후속 성공 상태 검수 예정</p>
+            </div>
+            <div class="queue-row">
+              <strong>시나리오 큐</strong>
+              <ul class="list">
+                <li>SCN-002 카드 결제 완료</li>
+                <li>SCN-003 빈 장바구니 예외 처리</li>
+                <li>SCN-004 프로모션 코드 적용</li>
+              </ul>
+            </div>
+            <div class="queue-row">
+              <strong>필터</strong>
+              <p>실패만 보기 / 차단 이슈 연결 / 현행화 요청 필요</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <p class="eyebrow">Review Mode</p>
+          <div class="badge-row">
+            <span class="badge badge-neutral">비교 모드</span>
+            <span class="badge badge-warning">Action 모드로 즉시 전환 가능</span>
+          </div>
+          <div class="compare-grid">
+            <article class="frame-card">
+              <strong>설계 / 확정 디자인</strong>
+              <p class="mini">Figma frame: Checkout / Main / PDF p.14</p>
+              <div class="frame-placeholder">확정 디자인과 설계서 미리보기</div>
+            </article>
+            <article class="frame-card">
+              <strong>실서비스 / 현재 캡처</strong>
+              <p class="mini">staging.acme-support.example/checkout</p>
+              <div class="frame-placeholder">실서비스 또는 최신 캡처</div>
+            </article>
+          </div>
+          <div class="queue-list">
+            <div class="queue-row">
+              <strong>시나리오 단계</strong>
+              <p>1. 상품 추가 2. 체크아웃 진입 3. 카드 입력 4. 결제 제출</p>
+            </div>
+            <div class="queue-row">
+              <strong>즉시 액션</strong>
+              <p>통과 / 실패 / 막힘 / 재검수 예약 / 다음 화면 이동</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <p class="eyebrow">Action Drawer</p>
+          <div class="queue-list">
+            <div class="queue-row">
+              <div class="row-topline"><strong>Capture Inbox</strong><span class="badge badge-ok">자동</span></div>
+              <p>EVD-020 에러 캡처 / EVD-021 빈 장바구니 캡처</p>
+            </div>
+            <div class="queue-row">
+              <strong>Spec Drift Lane</strong>
+              <ul class="list">
+                <li>구현 버그</li>
+                <li>설계 미반영</li>
+                <li>문서 미반영</li>
+                <li>디자인 변경 필요</li>
+              </ul>
+            </div>
+            <div class="queue-row">
+              <strong>빠른 이슈 생성</strong>
+              <p>제목 / 심각도 / 기대 결과 / 실제 결과만 입력</p>
+            </div>
+            <div class="queue-row">
+              <strong>현행화 요청 생성</strong>
+              <p>현재 ON / BUG-001과 함께 CR-003 생성 예정</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="bottom-strip">
+        <article class="panel">
+          <p class="eyebrow">증적 타임라인</p>
+          <div class="timeline">
+            <div class="timeline-item"><strong>EVD-020</strong><p>10:21 / iPhone Safari 에러 캡처 자동 수집</p></div>
+            <div class="timeline-item"><strong>EVD-021</strong><p>10:22 / 클립보드 캡처 자동 연결</p></div>
+          </div>
+        </article>
+        <article class="panel">
+          <p class="eyebrow">이슈 / 요청</p>
+          <div class="timeline">
+            <div class="timeline-item"><strong>BUG-001</strong><p>결제 제출 후 크래시 / 차단 이슈</p></div>
+            <div class="timeline-item"><strong>CR-003</strong><p>체크아웃 상태 문서 현행화 요청</p></div>
+          </div>
+        </article>
+        <article class="panel">
+          <p class="eyebrow">자동 패키징 스트립</p>
+          <div class="timeline">
+            <div class="timeline-item"><strong>Scenario Sheet</strong><p>SCN-002 실패 상태 반영 완료</p></div>
+            <div class="timeline-item"><strong>Bug Register</strong><p>BUG-001 자동 추가</p></div>
+            <div class="timeline-item"><strong>Evidence Index</strong><p>EVD-020, EVD-021 반영 완료</p></div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+  </html>

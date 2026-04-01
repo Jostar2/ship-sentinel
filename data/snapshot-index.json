@@ -1,0 +1,18 @@
+{
+  "audits": {
+    "audit-2026-04-01-acme": {
+      "snapshots": [
+        {
+          "audit_id": "audit-2026-04-01-acme",
+          "snapshot_id": "20260401-183222",
+          "label": "initial",
+          "archived_at": "2026-04-01 18:32:22",
+          "source_file": "data/runs/audit-2026-04-01-acme.json",
+          "source_hash": "1ed93976567b264be7ae1676ac8c86b0a7007429653a9b637e169836bca79503",
+          "restore_target": "data/runs/audit-2026-04-01-acme.json"
+        }
+      ],
+      "last_archived_at": "2026-04-01 18:32:22"
+    }
+  }
+}

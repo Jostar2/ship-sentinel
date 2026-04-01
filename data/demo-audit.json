@@ -1,0 +1,85 @@
+{
+  "runId": "run-2026-04-01-001",
+  "appName": "Acme Support Portal",
+  "target": "https://staging.acme-support.example",
+  "decision": "수정 후 출시",
+  "score": 68,
+  "coverage": {
+    "planned": 14,
+    "passed": 10,
+    "failed": 3,
+    "blocked": 1
+  },
+  "summary": {
+    "blockers": 3,
+    "warnings": 7,
+    "passed": 18
+  },
+  "findings": [
+    {
+      "id": "F-001",
+      "severity": "blocker",
+      "category": "보안",
+      "title": "관리자 export 경로가 인증 미들웨어 없이 노출됨",
+      "evidence": "인증되지 않은 요청이 /admin/export 에서 200을 반환"
+    },
+    {
+      "id": "F-002",
+      "severity": "blocker",
+      "category": "안정성",
+      "title": "체크아웃 경로가 빈 장바구니 상태에서 크래시남",
+      "evidence": "checkout 에서 처리되지 않은 null 접근 발생"
+    },
+    {
+      "id": "F-003",
+      "severity": "warning",
+      "category": "접근성",
+      "title": "주 네비게이션 아이콘에 라벨이 없음",
+      "evidence": "3개의 인터랙티브 요소에 accessible name 누락"
+    },
+    {
+      "id": "F-004",
+      "severity": "warning",
+      "category": "성능",
+      "title": "랜딩 페이지 번들 크기가 목표를 초과함",
+      "evidence": "모바일 프로필 기준 Initial JS 410kB"
+    }
+  ],
+  "timeline": [
+    {
+      "label": "입력 수집 완료",
+      "detail": "스테이징 URL과 릴리즈 노트 초안을 받음"
+    },
+    {
+      "label": "감사 결과 집계",
+      "detail": "보안, 접근성, 안정성, 성능 결과를 통합함"
+    },
+    {
+      "label": "판단 준비 완료",
+      "detail": "백엔드 담당자 후속 액션과 함께 수정 후 출시를 권장"
+    }
+  ],
+  "memo": {
+    "headline": "현재 상태로는 출시가 어렵습니다",
+    "nextOwner": "백엔드 리드",
+    "actions": [
+      "관리자 export 경로 보호",
+      "체크아웃 크래시 수정",
+      "패치 후 QA 감사 재실행"
+    ]
+  },
+  "deliverables": [
+    "test-scenarios.xlsx",
+    "execution-results.xlsx",
+    "bug-register.xlsx",
+    "evidence-index.xlsx",
+    "release-memo.md"
+  ],
+  "serviceFlow": [
+    "고객 URL 및 계정 수집",
+    "핵심 시나리오 설계",
+    "직접 테스트 수행",
+    "증적 수집 및 버그 등록",
+    "릴리즈 메모 전달"
+  ]
+}

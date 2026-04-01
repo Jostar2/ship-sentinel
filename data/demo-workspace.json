@@ -1,0 +1,151 @@
+{
+  "meta": {
+    "audit_id": "audit-2026-04-01-acme",
+    "service_name": "Acme Support Portal",
+    "target_url": "https://staging.acme-support.example",
+    "release_goal": "베타 출시 전 릴리즈 준비도 검수",
+    "requested_by": "Mina Kim",
+    "delivery_date": "2026-04-01",
+    "recommended_next_owner": "백엔드 리드"
+  },
+  "intake": {
+    "accounts": "buyer@test.example / admin@test.example",
+    "critical_flows": [
+      "Login and dashboard access",
+      "Checkout and payment",
+      "Account recovery",
+      "Admin export access"
+    ],
+    "known_risks": [
+      "Auth middleware recently changed",
+      "Checkout logic was refactored this sprint"
+    ],
+    "browsers": [
+      "Chrome Desktop",
+      "Safari iPhone"
+    ]
+  },
+  "scenarios": [
+    {
+      "scenario_id": "SCN-001",
+      "feature_area": "Authentication",
+      "priority": "P0",
+      "title": "User logs in with valid account",
+      "user_goal": "Access dashboard",
+      "preconditions": "Valid staging account exists",
+      "steps": "1. Open login\n2. Enter credentials\n3. Submit",
+      "expected_result": "Dashboard loads without error",
+      "risk_tag": "Core access",
+      "status": "통과",
+      "owner_notes": ""
+    },
+    {
+      "scenario_id": "SCN-002",
+      "feature_area": "Checkout",
+      "priority": "P0",
+      "title": "User completes purchase with card",
+      "user_goal": "Finish payment",
+      "preconditions": "Product in cart and payment test card available",
+      "steps": "1. Add item\n2. Open checkout\n3. Submit payment",
+      "expected_result": "Order confirmation appears",
+      "risk_tag": "Revenue",
+      "status": "실패",
+      "owner_notes": "결제 제출 직후 크래시 발생"
+    }
+  ],
+  "executions": [
+    {
+      "execution_id": "EXE-001",
+      "scenario_id": "SCN-001",
+      "executed_at": "2026-04-01 10:00",
+      "tester": "QA Operator",
+      "environment": "Staging",
+      "browser_device": "Chrome Desktop",
+      "result": "통과",
+      "observed_result": "대시보드가 정상적으로 열림",
+      "evidence_id": "EVD-001",
+      "linked_bug_id": "",
+      "retest_required": "아니오",
+      "notes": ""
+    },
+    {
+      "execution_id": "EXE-002",
+      "scenario_id": "SCN-002",
+      "executed_at": "2026-04-01 10:20",
+      "tester": "QA Operator",
+      "environment": "Staging",
+      "browser_device": "iPhone Safari",
+      "result": "Failed",
+      "observed_result": "Checkout crashed after clicking Pay",
+      "evidence_id": "EVD-002",
+      "linked_bug_id": "BUG-001",
+      "retest_required": "Yes",
+      "notes": ""
+    }
+  ],
+  "bugs": [
+    {
+      "bug_id": "BUG-001",
+      "severity": "차단",
+      "category": "안정성",
+      "title": "결제 제출 후 체크아웃이 크래시남",
+      "environment": "스테이징",
+      "browser_device": "iPhone Safari",
+      "scenario_id": "SCN-002",
+      "repro_steps": "1. Add item\n2. Open checkout\n3. Submit payment",
+      "expected_result": "주문 확인 화면이 나타나야 함",
+      "actual_result": "처리되지 않은 에러 페이지가 표시됨",
+      "impact": "매출 플로우가 출시 전에 차단됨",
+      "evidence_id": "EVD-002",
+      "owner_recommendation": "출시 전 백엔드 수정 필요",
+      "status": "열림"
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "EVD-001",
+      "type": "스크린샷",
+      "captured_at": "2026-04-01 10:00",
+      "file_name": "login-success.png",
+      "scenario_id": "SCN-001",
+      "bug_id": "",
+      "source_url": "https://staging.acme-support.example/login",
+      "summary": "로그인 후 대시보드 정상 상태",
+      "storage_path": "evidence/login-success.png",
+      "reviewer_notes": ""
+    },
+    {
+      "evidence_id": "EVD-002",
+      "type": "스크린샷",
+      "captured_at": "2026-04-01 10:21",
+      "file_name": "checkout-crash.png",
+      "scenario_id": "SCN-002",
+      "bug_id": "BUG-001",
+      "source_url": "https://staging.acme-support.example/checkout",
+      "summary": "결제 제출 직후 크래시 화면",
+      "storage_path": "evidence/checkout-crash.png",
+      "reviewer_notes": ""
+    }
+  ],
+  "memo": {
+    "decision": "수정 후 출시",
+    "headline": "현재 상태로는 출시가 어렵습니다",
+    "scope_covered": "로그인, 체크아웃, 계정 복구, 관리자 접근 경로 검수",
+    "blockers": [
+      "결제 제출 후 체크아웃 크래시",
+      "관리자 export 접근 권한 누락"
+    ],
+    "warnings": [
+      "주 네비게이션 아이콘 라벨 누락",
+      "랜딩 페이지 번들 크기 초과"
+    ],
+    "passed_areas": [
+      "기본 로그인 플로우"
+    ],
+    "actions": [
+      "관리자 export 경로 보호",
+      "체크아웃 크래시 수정",
+      "매출 플로우 재검수"
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "auto_claim_next": true,
+  "auto_complete_deterministic": true,
+  "auto_claim_after_complete": true,
+  "watch_interval_seconds": 45,
+  "agent_exec": {
+    "enabled": true,
+    "command": [
+      "codex",
+      "exec",
+      "-c",
+      "model_reasoning_effort=\"high\"",
+      "--full-auto",
+      "-C",
+      "{workspace_root}",
+      "-m",
+      "gpt-5",
+      "-o",
+      "{last_message_path}",
+      "-"
+    ],
+    "prompt_files": [
+      "ship-sentinel/ops/autonomy/AGENT_CONTEXT.md",
+      "ship-sentinel/ops/autonomy/NEXT_SLICE.md"
+    ],
+    "stdout_log_path": "ship-sentinel/ops/autonomy/last-agent-stdout.txt",
+    "last_message_path": "ship-sentinel/ops/autonomy/last-agent-message.md"
+  }
+}

@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Node / OS
+node_modules/
+.DS_Store
+Thumbs.db
+
+# Editor / local
+.env
+.env.*
+*.log
+*.bak
+*.bak.*
+*.pre
+*.orig
+app_candidate*.js
+app_part*.js
+app/_probe.js
+app/helper_aging_*.js
+docs/architecture/HELPER-*.md
+
+# Runtime autonomy state
+ops/autonomy/heartbeat.json
+ops/autonomy/state.json
+ops/autonomy/NEXT_SLICE.md
+ops/autonomy/last-agent-message.md
+ops/autonomy/last-agent-stdout.txt
+ops/autonomy/cycle-log.jsonl
+ops/autonomy/execution-log.jsonl
+
+# Local audit state and snapshots
+data/snapshots/
+
+# Exported deliverables
+output/*
+!output/.gitkeep

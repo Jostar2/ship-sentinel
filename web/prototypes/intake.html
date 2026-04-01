@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>고객 인테이크 프로토타입</title>
+    <link rel="stylesheet" href="./prototype.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <nav class="topbar">
+        <a href="./index.html">뒤로</a>
+        <a href="./audit-overview.html">다음: 감사 개요</a>
+      </nav>
+
+      <section class="hero">
+        <p class="eyebrow">화면 1</p>
+        <h1>고객 인테이크</h1>
+        <p>서비스 정보, 릴리즈 맥락, 계정, 고위험 플로우를 한 화면에서 입력한다.</p>
+      </section>
+
+      <section class="stat-grid">
+        <article class="stat-card">
+          <span>감사 상태</span>
+          <div class="big-number">초안</div>
+          <div class="badge-row"><span class="badge badge-neutral">저장됨</span></div>
+        </article>
+        <article class="stat-card">
+          <span>핵심 플로우</span>
+          <div class="big-number">4</div>
+          <p class="mini">로그인, 결제, 계정복구, 관리자 export</p>
+        </article>
+        <article class="stat-card">
+          <span>테스트 타겟</span>
+          <div class="big-number">2</div>
+          <p class="mini">Chrome Desktop, Safari iPhone</p>
+        </article>
+      </section>
+
+      <section class="grid-2">
+        <article class="panel">
+          <p class="eyebrow">프로젝트 정보</p>
+          <div class="field-stack">
+            <div class="field-line">서비스명: Acme Support Portal</div>
+            <div class="field-line">고객사명: Acme Commerce</div>
+            <div class="field-line">대상 URL: https://staging.acme-support.example</div>
+            <div class="field-line">환경: Staging</div>
+          </div>
+        </article>
+        <article class="panel">
+          <p class="eyebrow">릴리즈 맥락</p>
+          <div class="field-stack">
+            <div class="field-line">릴리즈 목표: Beta launch readiness review</div>
+            <div class="field-line">완료 희망일: 2026-04-03</div>
+            <div class="field-line">우선순위: P0 / 결제와 로그인 우선</div>
+            <div class="field-line">다음 담당자: backend lead</div>
+          </div>
+        </article>
+      </section>
+
+      <section class="grid-2">
+        <article class="panel">
+          <p class="eyebrow">접근 정보</p>
+          <div class="queue-list">
+            <div class="queue-row">
+              <div class="row-topline"><strong>테스트 계정</strong><span>2개</span></div>
+              <p>buyer@test.example / admin@test.example</p>
+            </div>
+            <div class="queue-row">
+              <div class="row-topline"><strong>브라우저 / 디바이스</strong><span>우선순위 대상</span></div>
+              <p>Chrome Desktop, Safari iPhone</p>
+            </div>
+          </div>
+        </article>
+        <article class="panel">
+          <p class="eyebrow">플로우 정의</p>
+          <div class="queue-list">
+            <div class="queue-row">
+              <strong>핵심 플로우</strong>
+              <ul class="list">
+                <li>로그인과 대시보드 접근</li>
+                <li>장바구니 결제</li>
+                <li>계정 복구</li>
+                <li>관리자 export 접근</li>
+              </ul>
+            </div>
+            <div class="queue-row">
+              <strong>리스크 영역</strong>
+              <ul class="list">
+                <li>인증 미들웨어 변경 직후</li>
+                <li>체크아웃 리팩터링 이후 안정성</li>
+              </ul>
+            </div>
+            <div class="queue-row">
+              <strong>범위 제외</strong>
+              <p>멀티랭귀지, 장기권한 정책, 성능부하 테스트</p>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+  </html>

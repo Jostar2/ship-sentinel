@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QA 세션 프로토타입</title>
+    <link rel="stylesheet" href="./prototype.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <nav class="topbar">
+        <a href="./index.html">뒤로</a>
+        <a href="./deliverables.html">다음: 산출물 패키지</a>
+      </nav>
+
+      <section class="hero">
+        <p class="eyebrow">화면 3</p>
+        <h1>QA 세션</h1>
+        <p>레퍼런스, 캡처 인박스, 이슈 작성, 스펙 드리프트 판단이 한 화면에서 이어진다.</p>
+      </section>
+
+      <section class="layout workspace-layout">
+        <article class="panel">
+          <p class="eyebrow">왼쪽 레일</p>
+          <div class="queue-list">
+            <div class="queue-row">
+              <div class="row-topline"><strong>SCR-014 체크아웃</strong><span class="badge badge-blocker">실패</span></div>
+              <p>주 결제 플로우</p>
+            </div>
+            <div class="queue-row">
+              <div class="row-topline"><strong>SCR-015 주문 확인</strong><span class="badge badge-neutral">미실행</span></div>
+              <p>결제 완료 이후 후속 화면</p>
+            </div>
+            <div class="queue-row">
+              <strong>활성 시나리오</strong>
+              <ul class="list">
+                <li>SCN-002 카드 결제 완료</li>
+                <li>SCN-003 빈 장바구니 예외 처리</li>
+              </ul>
+            </div>
+            <div class="queue-row">
+              <strong>참조 소스</strong>
+              <p>Figma: Checkout / PDF p.14 / 현재 확인본 v0.9</p>
+            </div>
+          </div>
+        </article>
+        <article class="panel">
+          <p class="eyebrow">중앙 메인</p>
+          <div class="compare-grid">
+            <article class="frame-card">
+              <strong>확정 디자인 / 설계 기준</strong>
+              <p class="mini">Screen ID: SCR-014 / Checkout</p>
+              <div class="frame-placeholder">Figma frame / PDF page preview</div>
+            </article>
+            <article class="frame-card">
+              <strong>실서비스 / 현재 캡처</strong>
+              <p class="mini">URL: /checkout / Safari iPhone / 390x844</p>
+              <div class="frame-placeholder">실서비스 화면 또는 최신 캡처 미리보기</div>
+            </article>
+          </div>
+          <div class="queue-list">
+            <div class="queue-row">
+              <strong>시나리오 단계</strong>
+              <p>1. 상품 추가 2. 체크아웃 진입 3. 카드 정보 입력 4. 결제 제출</p>
+            </div>
+            <div class="queue-row">
+              <strong>실행 컨트롤</strong>
+              <p>Passed / Failed / Blocked, 재검수 예약, 증적 연결, 다음 시나리오 이동</p>
+            </div>
+          </div>
+        </article>
+        <article class="panel">
+          <p class="eyebrow">캡처 인박스 + 이슈 작성</p>
+          <div class="field-stack">
+            <div class="field-line">최근 캡처: helper 업로드 완료 / SCR-014 / Safari iPhone / 10:21</div>
+            <div class="field-line">분류: 버그 / 문서 미반영 / 디자인 변경 / 보류</div>
+            <div class="field-line">제목: 결제 제출 후 에러 페이지 이동</div>
+            <div class="field-line">심각도: 차단</div>
+            <div class="field-line">현행화 요청 생성: ON</div>
+          </div>
+        </article>
+      </section>
+
+      <section class="bottom-strip">
+        <article class="panel">
+          <p class="eyebrow">증적 타임라인</p>
+          <div class="timeline">
+            <div class="timeline-item"><strong>EVD-019</strong><p>Windows helper가 클립보드 캡처를 자동 업로드</p></div>
+            <div class="timeline-item"><strong>EVD-020</strong><p>체크아웃 에러 직후 iPhone Safari 캡처</p></div>
+          </div>
+        </article>
+        <article class="panel">
+          <p class="eyebrow">히스토리</p>
+          <div class="timeline">
+            <div class="timeline-item"><strong>10:21</strong><p>BUG-001 생성</p></div>
+            <div class="timeline-item"><strong>10:22</strong><p>현행화 요청 CR-003 자동 생성</p></div>
+          </div>
+        </article>
+        <article class="panel">
+          <p class="eyebrow">패키지 준비도</p>
+          <div class="timeline">
+            <div class="timeline-item"><strong>시나리오 시트</strong><p>14개 중 14개 연결 완료</p></div>
+            <div class="timeline-item"><strong>버그 등록부</strong><p>차단 2건 / 경고 3건 반영</p></div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+  </html>
