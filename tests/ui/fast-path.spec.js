@@ -4,7 +4,7 @@ test("selected evidence can promote into a bug draft from the fast path", async 
   await page.addInitScript(() => window.localStorage.clear());
   await page.goto("/app/index.html?v=fast-path");
 
-  await page.getByRole("button", { name: /acme-checkout-014/ }).click();
+  await page.getByRole("button", { name: /SCN-002/ }).click();
   await page.getByRole("button", { name: /EVD-021/ }).click();
   await page.getByRole("button", { name: "버그 초안 생성" }).click();
 

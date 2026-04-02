@@ -15,6 +15,12 @@ const STORAGE_KEY = "ship-sentinel:workspace-state:v6";
 const seed = window.SHIP_SENTINEL_DEMO_STATE || {};
 const runLibrary = Array.isArray(window.SHIP_SENTINEL_RUN_LIBRARY) ? window.SHIP_SENTINEL_RUN_LIBRARY : [];
 const savedRuns = window.SHIP_SENTINEL_SAVED_RUNS || {};
+const QUEUE_VIEWS = [
+  { id: "priority", label: "우선 triage" },
+  { id: "failed", label: "실패 / P0" },
+  { id: "drift", label: "드리프트" },
+  { id: "watch", label: "재검수" },
+];
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -41,6 +47,8 @@ function normalize(input) {
       screenId: defaultScreenId,
       scenarioId: defaultScenarioId,
       evidenceId: defaultEvidenceId,
+      queueView: "priority",
+      queueQuery: "",
     },
     next.ui || {}
   );
@@ -95,6 +103,109 @@ function nextId(prefix, list, field) {
   return `${prefix}${String(max + 1).padStart(3, "0")}`;
 }
 
+function buildScenarioQueue(snapshot) {
+  const screensById = new Map((snapshot.screens || []).map((screen) => [screen.screen_id, screen]));
+  const evidenceByScreen = new Map();
+  const bugsByScreen = new Map();
+  const changesByScreen = new Map();
+
+  for (const item of snapshot.evidence || []) {
+    evidenceByScreen.set(item.screen_id, (evidenceByScreen.get(item.screen_id) || 0) + 1);
+  }
+  for (const item of snapshot.bugs || []) {
+    bugsByScreen.set(item.screen_id, (bugsByScreen.get(item.screen_id) || 0) + 1);
+  }
+  for (const item of snapshot.change_requests || []) {
+    changesByScreen.set(item.screen_id, (changesByScreen.get(item.screen_id) || 0) + 1);
+  }
+
+  return (snapshot.scenarios || [])
+    .map((scenario) => {
+      const screen = screensById.get(scenario.screen_id) || null;
+      const drifted = screen && screen.current_state_status === "drifted";
+      const pendingReview = screen && screen.current_state_status === "pending_review";
+      const bugCount = bugsByScreen.get(scenario.screen_id) || 0;
+      const changeCount = changesByScreen.get(scenario.screen_id) || 0;
+      const evidenceCount = evidenceByScreen.get(scenario.screen_id) || 0;
+      return {
+        scenario,
+        screen,
+        bugCount,
+        changeCount,
+        evidenceCount,
+        drifted,
+        pendingReview,
+        queueWeight: queueWeight(scenario, { drifted, pendingReview, bugCount, changeCount }),
+      };
+    })
+    .sort((a, b) => a.queueWeight - b.queueWeight);
+}
+
+function queueWeight(scenario, meta) {
+  let score = 100;
+  if (scenario.status === "실패") score -= 30;
+  if (scenario.priority === "P0") score -= 22;
+  if (scenario.priority === "P1") score -= 12;
+  if (meta.drifted) score -= 18;
+  if (meta.pendingReview) score -= 8;
+  if (meta.bugCount > 0) score -= 10;
+  if (meta.changeCount > 0) score -= 6;
+  if (scenario.status === "미실행") score -= 4;
+  return score;
+}
+
+function filterScenarioQueue(queue, view, query) {
+  const normalizedQuery = String(query || "").trim().toLowerCase();
+  return queue.filter((entry) => {
+    const matchesView =
+      view === "priority"
+        ? entry.scenario.status === "실패" || entry.scenario.priority === "P0" || entry.drifted
+        : view === "failed"
+          ? entry.scenario.status === "실패" || entry.scenario.priority === "P0"
+          : view === "drift"
+            ? entry.drifted || entry.pendingReview
+            : view === "watch"
+              ? entry.scenario.status === "미실행" || entry.changeCount > 0
+              : true;
+
+    if (!matchesView) return false;
+    if (!normalizedQuery) return true;
+
+    const haystack = [
+      entry.scenario.scenario_id,
+      entry.scenario.title,
+      entry.screen?.screen_id,
+      entry.screen?.display_name,
+      entry.screen?.route_hint,
+      entry.scenario.expected_result,
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
+    return haystack.includes(normalizedQuery);
+  });
+}
+
+function queueTone(entry) {
+  if (!entry) return "neutral";
+  if (entry.scenario.status === "실패") return "danger";
+  if (entry.drifted || entry.pendingReview || entry.scenario.priority === "P0") return "warn";
+  if (entry.scenario.status === "통과") return "ok";
+  return "neutral";
+}
+
+function queueHint(entry) {
+  if (!entry) return "";
+  const hints = [];
+  if (entry.drifted) hints.push("드리프트");
+  if (entry.scenario.priority === "P0") hints.push("P0");
+  if (entry.bugCount > 0) hints.push(`버그 ${entry.bugCount}`);
+  if (entry.changeCount > 0) hints.push(`현행화 ${entry.changeCount}`);
+  if (entry.evidenceCount > 0) hints.push(`증적 ${entry.evidenceCount}`);
+  return hints.join(" · ");
+}
+
 function exportState(snapshot) {
   const blob = new Blob([JSON.stringify(snapshot, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -140,6 +251,14 @@ export function ShipSentinelApp() {
   const currentCapture =
     currentEvidence &&
     (state.inbox.find((item) => item.evidence_id === currentEvidence.evidence_id) || null);
+  const scenarioQueue = buildScenarioQueue(state);
+  const filteredQueue = filterScenarioQueue(scenarioQueue, state.ui.queueView, state.ui.queueQuery);
+  const selectedQueueEntry =
+    filteredQueue.find((entry) => entry.scenario.scenario_id === state.ui.scenarioId) ||
+    scenarioQueue.find((entry) => entry.scenario.scenario_id === state.ui.scenarioId) ||
+    filteredQueue[0] ||
+    scenarioQueue[0] ||
+    null;
   const failedScenarioCount = state.scenarios.filter((item) => item.status === "실패").length;
   const driftedScreenCount = state.screens.filter((item) => item.current_state_status === "drifted").length;
   const linkedItemCount = state.bugs.length + state.change_requests.length;
@@ -176,6 +295,17 @@ export function ShipSentinelApp() {
   function selectScenario(scenarioId) {
     update((next) => {
       next.ui.scenarioId = scenarioId;
+      return next;
+    });
+  }
+
+  function selectQueueScenario(entry) {
+    if (!entry) return;
+    update((next) => {
+      next.ui.screenId = entry.screen?.screen_id || "";
+      next.ui.scenarioId = entry.scenario.scenario_id;
+      const evidenceForScreen = next.evidence.filter((item) => item.screen_id === entry.scenario.screen_id);
+      next.ui.evidenceId = evidenceForScreen[0] ? evidenceForScreen[0].evidence_id : "";
       return next;
     });
   }
@@ -482,48 +612,75 @@ export function ShipSentinelApp() {
           <aside className="panel-card panel-card--dark rail-shell">
             <div className="panel-card__head">
               <div>
-                <span className="section-label">Execution Rail</span>
-                <h2>화면 / 시나리오</h2>
+                <span className="section-label">Scenario Queue</span>
+                <h2>대규모 검수를 위한 작업 큐</h2>
               </div>
-              <StatPill tone="neutral" text={`${state.screens.length} screens`} />
+              <StatPill tone="neutral" text={`${state.scenarios.length} scenarios`} />
+            </div>
+            <p className="queue-copy">
+              시나리오를 화면별로 펼치지 않고, 우선순위 큐와 검색으로 줄입니다. 메인 작업면은 선택된 1건만 깊게 봅니다.
+            </p>
+            <div className="queue-views" aria-label="Scenario queue views">
+              {QUEUE_VIEWS.map((view) => (
+                <button
+                  key={view.id}
+                  className="queue-chip"
+                  data-state={state.ui.queueView === view.id ? "active" : "inactive"}
+                  type="button"
+                  onClick={() =>
+                    update((next) => {
+                      next.ui.queueView = view.id;
+                      return next;
+                    })
+                  }
+                >
+                  {view.label}
+                </button>
+              ))}
+            </div>
+            <label className="queue-search">
+              <span>검색</span>
+              <input
+                type="text"
+                value={state.ui.queueQuery || ""}
+                onChange={(event) =>
+                  update((next) => {
+                    next.ui.queueQuery = event.target.value;
+                    return next;
+                  })
+                }
+                placeholder="시나리오 ID, 화면 ID, 화면명, route"
+              />
+            </label>
+            <div className="rail-block">
+              <span className="rail-title">Queue Summary</span>
+              <div className="queue-summary">
+                <ContextCard
+                  label="Visible"
+                  value={`${filteredQueue.length}`}
+                  detail={`현재 뷰 ${QUEUE_VIEWS.find((item) => item.id === state.ui.queueView)?.label || "-"}`}
+                />
+                <ContextCard label="Failed" value={`${failedScenarioCount}`} detail="즉시 triage 필요" />
+                <ContextCard label="Drifted" value={`${driftedScreenCount}`} detail="설계 불일치 화면" />
+              </div>
             </div>
             <div className="rail-block">
-              <span className="rail-title">Screens</span>
+              <span className="rail-title">Queue Items</span>
               <div className="stack stack-tight">
-                {state.screens
-                  .slice()
-                  .sort((a, b) => screenWeight(a, state) - screenWeight(b, state))
-                  .map((item) => (
+                {filteredQueue.slice(0, 18).map((entry) => (
                     <RailButton
-                      key={item.screen_id}
-                      active={state.ui.screenId === item.screen_id}
-                      title={item.screen_id}
-                      badge={item.current_state_status || "-"}
-                      body={item.display_name}
-                      meta={`${item.feature_area || "-"} / ${item.route_hint || "-"}`}
-                      tone={(item.current_state_status || "") === "drifted" ? "danger" : (item.current_state_status || "") === "pending_review" ? "warn" : "neutral"}
-                      hint={state.scenarios.some((scenario) => scenario.screen_id === item.screen_id && scenario.status === "실패") ? "실패 시나리오 포함" : ""}
-                      onClick={() => selectScreen(item.screen_id)}
+                      key={entry.scenario.scenario_id}
+                      active={state.ui.scenarioId === entry.scenario.scenario_id}
+                      title={entry.screen?.screen_id || entry.scenario.scenario_id}
+                      badge={`${entry.scenario.status || "-"} / ${entry.scenario.priority || "-"}`}
+                      body={entry.scenario.title}
+                      meta={`${entry.scenario.scenario_id} / ${entry.screen?.display_name || "-"}`}
+                      tone={queueTone(entry)}
+                      hint={queueHint(entry)}
+                      onClick={() => selectQueueScenario(entry)}
                     />
-                  ))}
-              </div>
-            </div>
-            <div className="rail-block">
-              <span className="rail-title">Scenarios</span>
-              <div className="stack stack-tight">
-                {currentScenarios.map((item) => (
-                  <RailButton
-                    key={item.scenario_id}
-                    active={state.ui.scenarioId === item.scenario_id}
-                    title={item.scenario_id}
-                    badge={item.status || "-"}
-                    body={item.title}
-                    meta={`${item.priority || "-"} / ${item.expected_result || "-"}`}
-                    tone={item.status === "실패" ? "danger" : item.status === "미실행" ? "warn" : "ok"}
-                    hint={item.priority === "P0" ? "최우선 시나리오" : ""}
-                    onClick={() => selectScenario(item.scenario_id)}
-                  />
                 ))}
+                {!filteredQueue.length ? <EmptyState text="조건에 맞는 시나리오가 없습니다." dark /> : null}
               </div>
             </div>
           </aside>
@@ -539,8 +696,28 @@ export function ShipSentinelApp() {
                 <StatPill tone="neutral" text={currentScreen?.current_state_status || "-"} />
                 <StatPill tone="danger" text={`${bugsFor(currentScreen?.screen_id).length} bug`} />
                 <StatPill tone="warn" text={`${changesFor(currentScreen?.screen_id).length} change`} />
+                <StatPill tone="neutral" text={`${filteredQueue.length} visible in queue`} />
               </div>
             </div>
+
+            <section className="selected-queue-banner">
+              <div>
+                <span className="section-label">Selected Queue Item</span>
+                <h3>{selectedQueueEntry?.scenario.title || currentScenario?.title || "선택된 시나리오 없음"}</h3>
+                <p>
+                  {selectedQueueEntry
+                    ? `${selectedQueueEntry.scenario.scenario_id} / ${selectedQueueEntry.screen?.screen_id || "-"} / ${
+                        selectedQueueEntry.screen?.route_hint || "-"
+                      }`
+                    : "큐에서 선택된 시나리오가 없으면 기본 우선순위 항목을 표시합니다."}
+                </p>
+              </div>
+              <div className="hero-chips">
+                <StatPill tone={selectedQueueEntry ? queueTone(selectedQueueEntry) : "neutral"} text={selectedQueueEntry?.scenario.priority || "-"} />
+                <StatPill tone="neutral" text={selectedQueueEntry?.scenario.status || "-"} />
+                <StatPill tone="warn" text={queueHint(selectedQueueEntry) || "queue info"} />
+              </div>
+            </section>
 
             <div className="compare-stage">
               <div className="compare-stage__head">

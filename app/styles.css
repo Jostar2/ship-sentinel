@@ -506,6 +506,23 @@ p {
     rgba(12, 15, 23, 0.66);
 }
 
+.selected-queue-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(135deg, rgba(255, 163, 99, 0.1), rgba(87, 230, 209, 0.06)),
+    rgba(12, 16, 25, 0.72);
+}
+
+.selected-queue-banner p {
+  margin-top: 8px;
+}
+
 .rail-block,
 .stack,
 .console-stack {
@@ -515,6 +532,72 @@ p {
 
 .stack-tight {
   gap: 8px;
+}
+
+.queue-copy {
+  margin-top: 2px;
+  font-size: 0.95rem;
+}
+
+.queue-views {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.queue-chip {
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-soft);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.queue-chip[data-state="active"] {
+  background: linear-gradient(135deg, rgba(255, 163, 99, 0.22), rgba(255, 107, 44, 0.14));
+  border-color: rgba(255, 163, 99, 0.28);
+  color: #ffe8d3;
+}
+
+.queue-search {
+  display: grid;
+  gap: 8px;
+}
+
+.queue-search span {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.queue-search input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-main);
+  outline: none;
+}
+
+.queue-search input::placeholder {
+  color: rgba(247, 243, 238, 0.36);
+}
+
+.queue-search input:focus {
+  border-color: rgba(255, 163, 99, 0.3);
+  box-shadow: 0 0 0 4px rgba(255, 163, 99, 0.08);
+}
+
+.queue-summary {
+  display: grid;
+  gap: 10px;
 }
 
 .rail-title {
@@ -1062,11 +1145,16 @@ p {
   .inspection-grid,
   .overview-grid,
   .deliverable-grid,
-  .fast-console__actions {
+  .fast-console__actions,
+  .queue-summary {
     grid-template-columns: 1fr;
   }
 
   .package-banner {
+    display: grid;
+  }
+
+  .selected-queue-banner {
     display: grid;
   }
 
