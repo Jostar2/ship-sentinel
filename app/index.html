@@ -13,6 +13,16 @@
     <script src="./data/run-payloads.js"></script>
     <script src="./data/autonomy-status.js"></script>
     <script src="./data/run-lineage.js"></script>
+    <script>
+      [
+        "../runtime/app-data/run-library.js",
+        "../runtime/app-data/run-payloads.js",
+        "../runtime/app-data/autonomy-status.js",
+        "../runtime/app-data/run-lineage.js"
+      ].forEach(function (src) {
+        document.write('<script src="' + src + '"><\\/script>');
+      });
+    </script>
     <script src="./app.js"></script>
   </body>
   </html>

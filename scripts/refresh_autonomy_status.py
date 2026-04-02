@@ -5,9 +5,11 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OPS_DIR = ROOT / "ops" / "autonomy"
-APP_DATA_DIR = ROOT / "app" / "data"
-JSON_OUTPUT = ROOT / "data" / "autonomy-status.json"
+RUNTIME_DIR = ROOT / "runtime"
+OPS_DIR = RUNTIME_DIR / "ops" / "autonomy"
+APP_DATA_DIR = RUNTIME_DIR / "app-data"
+DATA_DIR = RUNTIME_DIR / "data"
+JSON_OUTPUT = DATA_DIR / "autonomy-status.json"
 JS_OUTPUT = APP_DATA_DIR / "autonomy-status.js"
 
 
@@ -48,6 +50,8 @@ def build_payload() -> dict:
 
 
 def refresh_autonomy_status() -> dict:
+    APP_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
     payload = build_payload()
     JSON_OUTPUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     JS_OUTPUT.write_text(

@@ -13,6 +13,12 @@
 - `data/autonomy-status.js`
 - `data/run-lineage.js`
 
+runtime override:
+
+- baseline seed는 `app/data/**`
+- live runtime override는 `../runtime/app-data/**`
+- `index.html`이 seed 다음에 runtime script를 덮어쓴다
+
 ## Main Views
 
 - 인테이크

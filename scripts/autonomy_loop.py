@@ -9,7 +9,9 @@ from refresh_autonomy_status import refresh_autonomy_status
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OPS_DIR = ROOT / "ops" / "autonomy"
+OPS_SEED_DIR = ROOT / "ops" / "autonomy"
+OPS_DIR = ROOT / "runtime" / "ops" / "autonomy"
+BACKLOG_TEMPLATE_PATH = OPS_SEED_DIR / "backlog.json"
 BACKLOG_PATH = OPS_DIR / "backlog.json"
 STATE_PATH = OPS_DIR / "state.json"
 NEXT_SLICE_PATH = OPS_DIR / "NEXT_SLICE.md"
@@ -166,7 +168,33 @@ def load_json(path: Path) -> dict:
 
 
 def write_json(path: Path, payload: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def default_state() -> dict:
+    return {
+        "mode": "autonomous-local",
+        "updated_at": now_stamp(),
+        "current_slice_id": "",
+        "last_completed_slice_id": "",
+        "last_generated_brief": "",
+        "history": [],
+        "human_gates": [
+            "real API key wiring",
+            "external network access",
+            "production deployment",
+            "desktop app installer signing",
+        ],
+    }
+
+
+def ensure_runtime_files() -> None:
+    OPS_DIR.mkdir(parents=True, exist_ok=True)
+    if not BACKLOG_PATH.exists():
+        BACKLOG_PATH.write_text(BACKLOG_TEMPLATE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+    if not STATE_PATH.exists():
+        write_json(STATE_PATH, default_state())
 
 
 def slices_by_id(backlog: dict) -> dict[str, dict]:
@@ -432,6 +460,7 @@ def main() -> None:
     brief_parser.add_argument("--write", action="store_true")
 
     args = parser.parse_args()
+    ensure_runtime_files()
     backlog = load_json(BACKLOG_PATH)
     state = load_json(STATE_PATH)
 

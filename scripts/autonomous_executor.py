@@ -9,10 +9,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE_ROOT = ROOT.parent
-OPS_DIR = ROOT / "ops" / "autonomy"
+OPS_SEED_DIR = ROOT / "ops" / "autonomy"
+OPS_DIR = ROOT / "runtime" / "ops" / "autonomy"
 STATE_PATH = OPS_DIR / "state.json"
 BACKLOG_PATH = OPS_DIR / "backlog.json"
-RECIPES_PATH = OPS_DIR / "executor-recipes.json"
+RECIPES_PATH = ROOT / "ops" / "autonomy" / "executor-recipes.json"
 LOG_PATH = OPS_DIR / "execution-log.jsonl"
 
 
@@ -28,6 +29,34 @@ def append_log(entry: dict) -> None:
     LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
     with LOG_PATH.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+
+def ensure_runtime_files() -> None:
+    OPS_DIR.mkdir(parents=True, exist_ok=True)
+    if not BACKLOG_PATH.exists():
+        BACKLOG_PATH.write_text((OPS_SEED_DIR / "backlog.json").read_text(encoding="utf-8"), encoding="utf-8")
+    if not STATE_PATH.exists():
+        STATE_PATH.write_text(
+            json.dumps(
+                {
+                    "mode": "autonomous-local",
+                    "updated_at": now_stamp(),
+                    "current_slice_id": "",
+                    "last_completed_slice_id": "",
+                    "last_generated_brief": "",
+                    "history": [],
+                    "human_gates": [
+                        "real API key wiring",
+                        "external network access",
+                        "production deployment",
+                        "desktop app installer signing",
+                    ],
+                },
+                ensure_ascii=False,
+                indent=2,
+            ) + "\n",
+            encoding="utf-8",
+        )
 
 
 def current_slice_id(state: dict) -> str:
@@ -126,6 +155,7 @@ def main() -> int:
     tail_parser.add_argument("--limit", type=int, default=10)
 
     args = parser.parse_args()
+    ensure_runtime_files()
     state = load_json(STATE_PATH)
     recipes = load_json(RECIPES_PATH)
 

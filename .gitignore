@@ -20,6 +20,7 @@ app_part*.js
 app/_probe.js
 app/helper_aging_*.js
 docs/architecture/HELPER-*.md
+runtime/
 
 # Runtime autonomy state
 ops/autonomy/heartbeat.json

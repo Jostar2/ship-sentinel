@@ -7,13 +7,14 @@ from refresh_autonomy_status import refresh_autonomy_status
 
 
 ROOT = Path(__file__).resolve().parents[1]
+RUNTIME_DIR = ROOT / "runtime"
 RUNS_DIR = ROOT / "data" / "runs"
 SNAPSHOTS_DIR = ROOT / "data" / "snapshots"
-JSON_OUTPUT = ROOT / "data" / "run-library.json"
-JS_OUTPUT = ROOT / "app" / "data" / "run-library.js"
-PAYLOAD_JS_OUTPUT = ROOT / "app" / "data" / "run-payloads.js"
-LINEAGE_JSON_OUTPUT = ROOT / "data" / "run-lineage.json"
-LINEAGE_JS_OUTPUT = ROOT / "app" / "data" / "run-lineage.js"
+JSON_OUTPUT = RUNTIME_DIR / "data" / "run-library.json"
+JS_OUTPUT = RUNTIME_DIR / "app-data" / "run-library.js"
+PAYLOAD_JS_OUTPUT = RUNTIME_DIR / "app-data" / "run-payloads.js"
+LINEAGE_JSON_OUTPUT = RUNTIME_DIR / "data" / "run-lineage.json"
+LINEAGE_JS_OUTPUT = RUNTIME_DIR / "app-data" / "run-lineage.js"
 
 
 def _read_json(path: Path) -> dict:
@@ -55,6 +56,8 @@ def summarize_run(path: Path) -> dict:
 
 def refresh_run_library() -> list[dict]:
     RUNS_DIR.mkdir(parents=True, exist_ok=True)
+    JSON_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    JS_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     run_paths = sorted(RUNS_DIR.glob("*.json"))
     entries = [summarize_run(path) for path in run_paths]
     # Prefer latest saved_at; fallback to latest snapshot time

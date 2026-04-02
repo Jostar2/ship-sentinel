@@ -1,38 +1,34 @@
 # Autonomy Ops
 
-`ship-sentinel/ops/autonomy`는 다음 슬라이스를 자동으로 선택하고 상태를 기록하기 위한 로컬 운영 레이어다.
+`ship-sentinel/ops/autonomy`는 seed와 static config를 두는 위치다.
 
-핵심 파일:
+tracked seed/config:
 
 - `backlog.json`
-- `state.json`
-- `NEXT_SLICE.md`
 - `driver-config.json`
 - `AGENT_CONTEXT.md`
 - `executor-recipes.json`
-- `execution-log.jsonl`
-- `cycle-log.jsonl`
-- `heartbeat.json`
-- `../scripts/start_autonomy_watch.ps1`
-- `../scripts/register_autonomy_task.ps1`
-- `../scripts/install_startup_launcher.ps1`
+
+runtime live state:
+
+- `ship-sentinel/runtime/ops/autonomy/backlog.json`
+- `ship-sentinel/runtime/ops/autonomy/state.json`
+- `ship-sentinel/runtime/ops/autonomy/NEXT_SLICE.md`
+- `ship-sentinel/runtime/ops/autonomy/heartbeat.json`
+- `ship-sentinel/runtime/ops/autonomy/cycle-log.jsonl`
+- `ship-sentinel/runtime/ops/autonomy/execution-log.jsonl`
 
 역할:
 
 - 다음 ready slice 자동 선택
-- backlog가 비면 다음 파동 slice 자동 시드
-- 고정 seed가 끝나면 track별 동적 discovery wave 생성
-- 현재 진행중 slice 추적
-- 의존성 기반 우선순위 정렬
-- 다음 작업 brief 자동 생성
-- deterministic 로컬 명령 실행
-- 실행 receipt 기록
-- one-shot autonomy cycle 실행
-- 필요 시 `codex exec`로 다음 작업 외부 에이전트 호출
-- watch 모드로 반복 실행
-- Windows scheduled task 등록 scaffold 제공
+- backlog 동적 seed / discovery wave 생성
+- 현재 slice 추적
+- deterministic executor 실행
+- `codex exec` handoff
+- watch loop / heartbeat 기록
 
-한계:
+원칙:
 
-- 실제 완전 무인 장기 실행은 로컬 프로세스를 계속 띄워야 함
-- human gate가 필요한 작업은 계속 멈춘다
+- repo에 남는 파일은 seed와 문서
+- 실시간 상태와 로그는 `runtime/` 아래 ignored 경로만 사용
+- hard human gate가 필요한 작업은 계속 멈춘다

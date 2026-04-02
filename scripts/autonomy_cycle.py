@@ -13,12 +13,41 @@ from refresh_autonomy_status import refresh_autonomy_status
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE_ROOT = ROOT.parent
-OPS_DIR = ROOT / "ops" / "autonomy"
+OPS_SEED_DIR = ROOT / "ops" / "autonomy"
+OPS_DIR = ROOT / "runtime" / "ops" / "autonomy"
 STATE_PATH = OPS_DIR / "state.json"
 BACKLOG_PATH = OPS_DIR / "backlog.json"
-CONFIG_PATH = OPS_DIR / "driver-config.json"
+CONFIG_PATH = ROOT / "ops" / "autonomy" / "driver-config.json"
 CYCLE_LOG_PATH = OPS_DIR / "cycle-log.jsonl"
 HEARTBEAT_PATH = OPS_DIR / "heartbeat.json"
+
+
+def ensure_runtime_files() -> None:
+    OPS_DIR.mkdir(parents=True, exist_ok=True)
+    if not BACKLOG_PATH.exists():
+        BACKLOG_PATH.write_text((OPS_SEED_DIR / "backlog.json").read_text(encoding="utf-8"), encoding="utf-8")
+    if not STATE_PATH.exists():
+        STATE_PATH.write_text(
+            json.dumps(
+                {
+                    "mode": "autonomous-local",
+                    "updated_at": now_stamp(),
+                    "current_slice_id": "",
+                    "last_completed_slice_id": "",
+                    "last_generated_brief": "",
+                    "history": [],
+                    "human_gates": [
+                        "real API key wiring",
+                        "external network access",
+                        "production deployment",
+                        "desktop app installer signing",
+                    ],
+                },
+                ensure_ascii=False,
+                indent=2,
+            ) + "\n",
+            encoding="utf-8",
+        )
 
 
 def now_stamp() -> str:
@@ -30,11 +59,13 @@ def load_json(path: Path) -> dict:
 
 
 def append_cycle_log(entry: dict) -> None:
+    CYCLE_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
     with CYCLE_LOG_PATH.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 
 def write_heartbeat(status: str, details: dict) -> None:
+    HEARTBEAT_PATH.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "timestamp": now_stamp(),
         "status": status,
@@ -154,9 +185,10 @@ def run_agent_exec(config: dict, dry_run: bool) -> dict:
 
 
 def execute_cycle(dry_run: bool) -> int:
+    ensure_runtime_files()
     state = load_json(STATE_PATH)
     backlog = load_json(BACKLOG_PATH)
-    recipes = load_json(OPS_DIR / "executor-recipes.json")
+    recipes = load_json(ROOT / "ops" / "autonomy" / "executor-recipes.json")
     config = load_json(CONFIG_PATH)
 
     cycle_receipt = {
