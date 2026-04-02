@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ship Sentinel UI Lab</title>
+    <script type="module" src="./main.js"></script>
+  </head>
+  <body>
+    <main class="lab-shell">
+      <section class="lab-hero">
+        <p class="lab-kicker">UI Lab</p>
+        <h1>Ship Sentinel UI/UX Tooling Lab</h1>
+        <p class="lab-copy">
+          Open Props, Lucide, Motion, Floating UI를 한 화면에서 바로 시험하는 실험 공간입니다.
+        </p>
+        <div class="lab-actions">
+          <button class="lab-button lab-button-primary" id="tooltip-anchor" type="button">
+            <i data-lucide="sparkles"></i>
+            Primary Action
+          </button>
+          <button class="lab-button lab-button-secondary" type="button">
+            <i data-lucide="scan-search"></i>
+            Compare Flow
+          </button>
+          <button class="lab-button lab-button-ghost" type="button">
+            <i data-lucide="captions"></i>
+            Capture Inbox
+          </button>
+        </div>
+        <div class="lab-tooltip" id="floating-tip" role="tooltip">
+          Floating UI tooltip: session-first CTA를 빠르게 점검하는 자리입니다.
+        </div>
+      </section>
+
+      <section class="lab-grid">
+        <article class="lab-card" data-lab-card>
+          <div class="lab-card-topline">
+            <span class="lab-badge">Open Props</span>
+            <i data-lucide="palette"></i>
+          </div>
+          <h2>Design Token Surface</h2>
+          <p>색상, 간격, radius를 CSS token 기반으로 통일하는 실험 카드입니다.</p>
+        </article>
+        <article class="lab-card" data-lab-card>
+          <div class="lab-card-topline">
+            <span class="lab-badge">Motion</span>
+            <i data-lucide="orbit"></i>
+          </div>
+          <h2>Entrance Motion</h2>
+          <p>페이지 진입 시 계층이 보이도록 stagger와 micro-lift를 확인합니다.</p>
+        </article>
+        <article class="lab-card" data-lab-card>
+          <div class="lab-card-topline">
+            <span class="lab-badge">Lucide</span>
+            <i data-lucide="shapes"></i>
+          </div>
+          <h2>Icon Consistency</h2>
+          <p>동일 stroke 계열 아이콘으로 제품 전반의 시각적 긴장을 맞춥니다.</p>
+        </article>
+      </section>
+    </main>
+  </body>
+  </html>

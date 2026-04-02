@@ -1,28 +1,25 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Ship Sentinel App</title>
-    <link rel="stylesheet" href="./styles.css" />
+    <title>Ship Sentinel</title>
+    <meta
+      name="description"
+      content="QA Session, Overview, Deliverables 세 면으로 재구성한 Ship Sentinel 운영 콘솔"
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230f1218'/%3E%3Cpath d='M18 24h28v6H18zm0 10h20v6H18zm0 10h28v6H18z' fill='%23ff9f5b'/%3E%3C/svg%3E"
+    />
+    <script>
+      if (location.port === "41740") {
+        location.replace(`http://127.0.0.1:41743${location.pathname}${location.search}`);
+      }
+    </script>
   </head>
   <body>
-    <div id="app"></div>
-    <script src="./data/demo-state.js"></script>
-    <script src="./data/run-library.js"></script>
-    <script src="./data/run-payloads.js"></script>
-    <script src="./data/autonomy-status.js"></script>
-    <script src="./data/run-lineage.js"></script>
-    <script>
-      [
-        "../runtime/app-data/run-library.js",
-        "../runtime/app-data/run-payloads.js",
-        "../runtime/app-data/autonomy-status.js",
-        "../runtime/app-data/run-lineage.js"
-      ].forEach(function (src) {
-        document.write('<script src="' + src + '"><\\/script>');
-      });
-    </script>
-    <script src="./app.js"></script>
+    <div id="root">Ship Sentinel 로딩 중...</div>
+    <script type="module" src="./src/main.jsx?v=react-rebuild-2"></script>
   </body>
   </html>

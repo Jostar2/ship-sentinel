@@ -1,0 +1,37 @@
+{
+  "name": "ship-sentinel",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Session-first QA workspace for scenario review, evidence capture, issue triage, and deliverable packaging.",
+  "scripts": {
+    "ui:dev": "vite --host 127.0.0.1",
+    "ui:build": "vite build",
+    "ui:preview": "vite preview --host 127.0.0.1",
+    "ui:test": "cross-env SHIP_SENTINEL_UI_PORT=41743 playwright test",
+    "ui:test:headed": "playwright test --headed",
+    "ui:test:a11y": "cross-env SHIP_SENTINEL_UI_PORT=41744 playwright test tests/ui/a11y.spec.js",
+    "format:check": "prettier --check \"app/**/*.{html,js,css}\" \"docs/**/*.md\"",
+    "format:write": "prettier --write \"app/**/*.{html,js,css}\" \"docs/**/*.md\""
+  },
+  "dependencies": {
+    "@floating-ui/dom": "^1.7.6",
+    "@radix-ui/react-scroll-area": "^1.2.10",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "axe-core": "^4.11.2",
+    "lucide": "^1.7.0",
+    "lucide-react": "^1.7.0",
+    "motion": "^12.38.0",
+    "open-props": "^1.7.23",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.1",
+    "@playwright/test": "^1.59.1",
+    "@vitejs/plugin-react": "^6.0.1",
+    "cross-env": "^10.1.0",
+    "prettier": "^3.8.1",
+    "vite": "^8.0.3"
+  }
+}
