@@ -204,6 +204,14 @@ def execute_cycle(dry_run: bool) -> int:
         cycle_receipt["steps"].append({"type": "claim-next", **claim_result})
         if not dry_run:
             state = load_json(STATE_PATH)
+            if current_slice_id(state):
+                write_heartbeat(
+                    "slice-claimed",
+                    {
+                        "dry_run": dry_run,
+                        "current_slice": current_slice_id(state),
+                    },
+                )
 
     slice_id = current_slice_id(state)
     if not slice_id:
