@@ -254,8 +254,13 @@ def write_rows(workbook_path: Path, sheet_name: str, rows: list[list[object]], s
     max_data_row = ws.max_row
     if max_data_row >= start_row:
         ws.delete_rows(start_row, max_data_row - start_row + 1)
-    for row in rows:
-        ws.append(row)
+    for row_index, row in enumerate(rows, start=start_row):
+        for column, value in enumerate(row, start=1):
+            cell = ws.cell(row=row_index, column=column)
+            cell.value = value
+            if isinstance(value, str):
+                # Audit text can start with "=" or contain an Excel error token.
+                cell.data_type = "s"
     wb.save(workbook_path)
 
 
